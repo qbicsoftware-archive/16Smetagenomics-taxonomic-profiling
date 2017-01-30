@@ -99,8 +99,8 @@ rule clipAndMerge:
         log("{smp}{lane}_log.txt")
     output:
         "ClipAndMerge/{smp}" + seperator + "{lane}." + file_ending
-    shell:
-        "ClipAndMerge -in1 " + input['L'] + "-in2" + input['R'] + " -o {output} -log {log}"
+    run:
+        shell("ClipAndMerge -in1 " + input['L'] + "-in2" + input['R'] + " -o {output} -log {log}")
 
 
 rule runMalt:
