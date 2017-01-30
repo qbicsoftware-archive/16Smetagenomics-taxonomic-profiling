@@ -94,15 +94,22 @@ print(expand(result("{smp}{lane}"), filtered_product, smp=set(SAMPLES), lane=set
 rule clipAndMerge:
     input:
         L = data("{smp}" + pair_id + seperator + "{lane}." + file_ending) if seperator != '' else data("{smp}{lane}" + pair_id + "." + file_ending),
-        R = data("{smp}" + pair_id_2 + seperator +  "{lane}." + file_ending) if seperator != '' else data("{smp}{lane}" + pair_id_2 + "." + file_ending)
-    log: log("{smp}{lane}_log.txt")
-    output: "ClipAndMerge/{smp}" + seperator + "{lane}." + file_ending
-    shell: "ClipAndMerge -in1 input['L'] -in2 input['R'] -o {output} -log {log}"
+        R = data("{smp}" + pair_id_2 + seperator + "{lane}." + file_ending) if seperator != '' else data("{smp}{lane}" + pair_id_2 + "." + file_ending)
+    log:
+        log("{smp}{lane}_log.txt")
+    output:
+        "ClipAndMerge/{smp}" + seperator + "{lane}." + file_ending
+    shell:
+        "ClipAndMerge -in1 " + input['L'] + "-in2" + input['R'] + " -o {output} -log {log}"
 
 
 rule runMalt:
-    input: "ClipAndMerge/{smp}" + seperator + "{lane}." + file_ending
-    log: log("{smp}{lane}_log.txt")
-    output: result("{smp}" + seperator + "{lane}")
-    shell: "malt-run -m BlastN -at SemiGlobal -t 64 -wlca -mq 25 -d /lustre_cfc/qbic/reference_genomes/16SMicrobial -o {output} -i {input} > {log}"
-
+    input:
+        "ClipAndMerge/{smp}" + seperator + "{lane}." + file_ending
+    log:
+        log("{smp}{lane}_log.txt")
+    output:
+        result("{smp}" + seperator + "{lane}")
+    shell:
+        "malt-run -m BlastN -at SemiGlobal -t 64 -wlca -mq 25 "
+        " -d /lustre_cfc/qbic/reference_genomes/16SMicrobial -o {output} -i {input} >> {log}"
