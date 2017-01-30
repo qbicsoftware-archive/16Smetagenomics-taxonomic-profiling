@@ -88,6 +88,7 @@ pair_id_2 = pair_id.replace("1","2")
 rule all:
     input: [x[:-1] for x in expand(result("{smp}{lane}"), filtered_product, smp=set(SAMPLES), lane=set(LANES))]
 
+
 rule clipAndMerge:
     input:
         L = data("{smp}" + pair_id + seperator + "{lane}." + file_ending) if seperator != '' else data("{smp}{lane}" + pair_id + "." + file_ending),
@@ -97,7 +98,7 @@ rule clipAndMerge:
     output:
         "ClipAndMerge/{smp}" + seperator + "{lane}." + file_ending
     run:
-        shell("java -jar ClipAndMerge-1.7.5.jar -in1 " + input['L'] + " -in2 " + input['R'] + " -o {output} -log {log}")
+        shell("java -jar {jar} -in1 {l} -in2 {r} -o {output} -log {log}".format(jar=os.path.join(os.environ['CLIPANDMERGE_BIN_DIR'], 'ClipAndMerge-1.7.5.jar'), l=input['L'], r=input['R']))
 
 
 rule runMalt:
