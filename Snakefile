@@ -98,7 +98,7 @@ rule clipAndMerge:
     output:
         "ClipAndMerge/{smp}" + seperator + "{lane}." + file_ending
     run:
-        shell("java -jar {jar} -in1 {l} -in2 {r} -o {output} -log {log}".format(jar=os.path.join(os.environ['CLIPANDMERGE_BIN_DIR'], 'ClipAndMerge-1.7.5.jar'), l=input['L'], r=input['R']))
+        shell("java -jar " + os.path.join(os.environ['CLIPANDMERGE_BIN_DIR'], 'ClipAndMerge-1.7.5.jar') + " -in1 " + input['L'] + " -in2 " + input['R'] + " -o {output} -log {log}")
 
 
 rule runMalt:
