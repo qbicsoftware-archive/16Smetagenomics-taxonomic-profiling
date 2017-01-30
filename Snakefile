@@ -66,7 +66,6 @@ for ending in ['fastq.gz', 'fastq', 'fq', 'fq.gz']:
                 if match:
                    match2 = re.search(r'[\_\.]', match.group(1))
                    seperator = match2.group(0) if match2 else seperator
-                print(seperator)
                 pair_id = p
                 SAMPLES, LANES= glob_wildcards(data("{smp}" + p + "{lane}" + ending))
 
@@ -89,8 +88,6 @@ pair_id_2 = pair_id.replace("1","2")
 rule all:
     input: [x[:-1] for x in expand(result("{smp}{lane}"), filtered_product, smp=set(SAMPLES), lane=set(LANES))]
 
-
-print(expand(result("{smp}{lane}"), filtered_product, smp=set(SAMPLES), lane=set(LANES)))
 rule clipAndMerge:
     input:
         L = data("{smp}" + pair_id + seperator + "{lane}." + file_ending) if seperator != '' else data("{smp}{lane}" + pair_id + "." + file_ending),
