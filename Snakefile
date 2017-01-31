@@ -108,6 +108,7 @@ rule runMalt:
         log("{smp}{lane}_log.txt")
     output:
         result("{smp}" + seperator + "{lane}")
-    shell:
-        "malt-run -m BlastN -at SemiGlobal -t 64 -wlca -mq 25 "
-        " -d /lustre_cfc/qbic/reference_genomes/16SMicrobial -o {output} -i {input} >> {log}"
+    run:
+        if not os.path.exists(result("{smp}" + seperator + "{lane}")):
+            os.makedirs(result("{smp}" + seperator + "{lane}"))
+        shell("malt-run -m BlastN -at SemiGlobal -t 64 -wlca -mq 25 -d /lustre_cfc/qbic/reference_genomes/16SMicrobial -o {output} -i {input} >> {log}"
