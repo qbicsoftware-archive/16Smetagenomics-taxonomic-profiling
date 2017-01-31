@@ -109,6 +109,6 @@ rule runMalt:
     output:
         result("{smp}" + seperator + "{lane}")
     run:
-        if not os.path.exists(result("{smp}" + seperator + "{lane}")):
-            os.makedirs(result("{smp}" + seperator + "{lane}"))
+        if not os.path.exists("{output}"):
+            os.makedirs("{output}")
         shell("malt-run -m BlastN -at SemiGlobal -t 64 -wlca -mq 25 -d /lustre_cfc/qbic/reference_genomes/16SMicrobial -o {output} -i {input} >> {log}")
