@@ -109,5 +109,5 @@ rule runMalt:
     output:
         result("{smp}" + seperator + "{lane}")
     run:
-        os.makedirs("{output}")
+        shell("mkdir {output}")
         shell("malt-run -m BlastN -at SemiGlobal -t 64 -wlca -mq 25 -d /lustre_cfc/qbic/reference_genomes/16SMicrobial -o {output} -i {input} >> {log}")
