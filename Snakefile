@@ -86,7 +86,7 @@ filtered_product = filter_combinator(product, pair_id, filter_for)
 
 pair_id_2 = pair_id.replace("1","2")
 rule all:
-    input: [x[:-1] for x in expand(result("{smp}{lane}/"), filtered_product, smp=set(SAMPLES), lane=set(LANES))]
+    input: [x[:-1] for x in expand(result("{smp}{lane}"), filtered_product, smp=set(SAMPLES), lane=set(LANES))]
 
 
 rule clipAndMerge:
@@ -107,8 +107,7 @@ rule runMalt:
     log:
         log("{smp}{lane}_log.txt")
     output:
-        result("{smp}" + seperator + "{lane}/")
+        result("{smp}" + seperator + "{lane}")
     run:
-        if not os.path.exists("{output}"):
-            os.makedirs("{output}")
+        os.makedirs("{output}")
         shell("malt-run -m BlastN -at SemiGlobal -t 64 -wlca -mq 25 -d /lustre_cfc/qbic/reference_genomes/16SMicrobial -o {output} -i {input} >> {log}")
